@@ -1,0 +1,38 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+
+
+steps:
+# 1. Repo checkout
+- checkout: self
+
+# 2. Terraform install
+- task: TerraformInstaller
+  inputs:
+    terraformVersion: '1.7.5'   # apni version accordingly
+
+# 3. Terraform init
+- script: terraform init
+  displayName: 'Terraform Init'
+
+# 4. Terraform validate
+- script: terraform validate
+  displayName: 'Terraform Validate'
+
+# 5. Terraform plan
+- script: terraform plan -out=tfplan
+  displayName: 'Terraform Plan'
+
+# 6. Terraform apply (Auto approve)
+# Agar apply nahi chahiye to comment kar do
+- script: terraform apply -auto-approve tfplan
+  displayName: 'Terraform Apply'
